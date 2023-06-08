@@ -6,7 +6,7 @@ import { User } from './User';
 Category.hasMany(Course, { as: 'courses' })
 Course.belongsTo(Category)
 
-Course.hasMany(Episode)
+Course.hasMany(Episode) //no courseService posso passar simplesmente ' association: 'Episodes' '
 Episode.belongsTo(Course)
 
 export {
