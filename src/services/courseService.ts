@@ -1,3 +1,4 @@
+import { Op } from "sequelize"
 import { Course } from "../models"
 
 export const courseService = {
@@ -36,5 +37,37 @@ export const courseService = {
 
         return randomFeaturedCourses.slice(0, 3)
     },
+
+    getTopTenNewest: async () => {
+        const courses = await Course.findAll({
+            limit: 10,
+            order: [['created_at', 'DESC']],
+        })
+
+        return courses
+    },
+
+    findByName: async (name: string, page: number, perPage: number) => {
+
+        const offset = (page - 1) * perPage
+
+        const { count, rows } = await Course.findAndCountAll({
+            attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`
+                }
+            },
+            limit: perPage,
+            offset
+        })
+
+        return {
+            courses: rows,
+            page,
+            perPage,
+            total: count
+        }
+    }
 
 }
