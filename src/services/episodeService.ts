@@ -1,6 +1,7 @@
 import { Response } from 'express'
 import fs from 'fs'
 import path from 'path'
+import { WatchTime, WatchTimeAttributes } from '../models/WatchTime'
 
 export const episodeService = {
     streamEpisodeToResponse: (res: Response, videoUrl: string, range: string | undefined) => {
@@ -14,7 +15,7 @@ export const episodeService = {
 
             const start = parseInt(parts[0], 10)
             const end = parts[1] ? parseInt(parts[1], 10) : fileStat.size - 1 // se não houver o segundo valor, o end será o tamanho do arquivo - 1
-           
+
             const chunkSize = (end - start) + 1 // tamanho do chunk
 
             const file = fs.createReadStream(filePath, { start, end }) // cria um stream do arquivo
@@ -40,4 +41,41 @@ export const episodeService = {
         }
 
     },
+
+    getWatchTime: async (userId: number, episodeId: number) => {
+        const watchTime = await WatchTime.findOne({
+            attributes: ['seconds'],
+            where: {
+                userId,
+                episodeId
+            }
+        })
+
+        return watchTime
+    },
+
+    setWatchTime: async ({ userId, episodeId, seconds }: WatchTimeAttributes) => {
+        const watchTimeAlreadyExists = await WatchTime.findOne({
+            where: {
+                userId,
+                episodeId
+            }
+        })
+
+        if (watchTimeAlreadyExists) {
+            watchTimeAlreadyExists.seconds = seconds
+            await watchTimeAlreadyExists.save()
+
+            return watchTimeAlreadyExists
+        } else {
+            const watchTime = await WatchTime.create({
+                userId,
+                episodeId,
+                seconds
+            })
+
+            return watchTime
+        }
+    },
+
 }
