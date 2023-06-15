@@ -16,6 +16,7 @@ router.get('/categories',       ensureAuth, categoriesController.index)
 router.get('/categories/:id',   ensureAuth, categoriesController.show)
 
 router.get('/courses/featured', ensureAuth, coursesController.featured)
+router.get('/courses/popular',  ensureAuth, coursesController.popular)
 router.get('/courses/newest',   coursesController.newest)
 router.get('/courses/search',   ensureAuth, coursesController.search)
 router.get('/courses/:id',      ensureAuth, coursesController.show)
@@ -27,6 +28,6 @@ router.post('/favorites',       ensureAuth, favoritesController.save)
 router.delete('/favorites/:id', ensureAuth, favoritesController.delete)
 
 router.post('/likes',           ensureAuth, likesController.save)
-router.delete('/likes/:id',      ensureAuth, likesController.delete)
+router.delete('/likes/:id',     ensureAuth, likesController.delete)
 
 export { router }

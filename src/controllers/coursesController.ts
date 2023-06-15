@@ -33,6 +33,18 @@ export const coursesController = {
         }
     },
 
+    // GET /courses/popular
+    popular: async (req: Request, res: Response) => {
+        try {
+            const topTen = await courseService.getTopTenByLikes()
+            return res.json(topTen)
+        } catch (err) {
+            if (err instanceof Error) {
+                return res.status(400).json({ message: err.message })
+            }
+        }
+    },
+
     // GET /courses/search?name=
     search: async (req: Request, res: Response) => {
         const { name } = req.query
@@ -49,7 +61,6 @@ export const coursesController = {
         }
     },
 
-
     // GET /courses/:id
     show: async (req: AuthenticatedRequest, res: Response) => {
         const userId = req.user!.id
@@ -64,12 +75,12 @@ export const coursesController = {
             const favorited = await favoriteService.isFavorited(userId, Number(courseId))
 
             return res.json({ ...course.get(), favorited, liked })
-            
+
         } catch (err) {
             if (err instanceof Error) {
                 return res.status(400).json({ message: err.message })
             }
         }
-    }
+    },
 
 }
