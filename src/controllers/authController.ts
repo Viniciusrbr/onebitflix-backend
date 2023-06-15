@@ -13,7 +13,7 @@ export const authController = {
             const userAlreadyExists = await userService.findByEmail(email)
 
             if (userAlreadyExists) {
-                throw new Error('This email is already registered.')
+                throw new Error('Este e-mail já está registado.')
             }
 
             const user = await userService.create({
@@ -42,11 +42,11 @@ export const authController = {
         try {
             const user = await userService.findByEmail(email)
 
-            if (!user) return res.status(404).json({ message: 'email not registered' })
+            if (!user) return res.status(404).json({ message: 'E-mail não registrado' })
             
             user.checkPassword(password, (err, isSame) => {
                 if (err) return res.status(400).json({ message: err.message })
-                if (!isSame) return res.status(401).json({ message: 'Wrong password' })
+                if (!isSame) return res.status(401).json({ message: 'Senha errada' })
                 
                 const payload = {
                     id: user.id,
