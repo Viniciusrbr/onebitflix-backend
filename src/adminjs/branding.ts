@@ -1,8 +1,8 @@
-import { BrandingOptions } from 'adminjs'
+import { BrandingOptions } from "adminjs";
 
 export const brandingOptions: BrandingOptions = {
     companyName: 'OneBitFlix',
-    logo: '/logoonebitflix.svg',
+    logo: '/onebitflix.svg',
     theme: {
         colors: {
             primary100: '#ff0043',
@@ -19,5 +19,5 @@ export const brandingOptions: BrandingOptions = {
             accent: '#151515',
             hoverBg: '#151515',
         }
-    }
+    },
 }

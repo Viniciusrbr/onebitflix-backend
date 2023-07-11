@@ -1,7 +1,7 @@
-import { sequelize } from '../database'
-import { DataTypes, Model, Optional } from 'sequelize'
+import { DataTypes, Model, Optional } from "sequelize"
+import { sequelize } from "../database"
 import bcrypt from 'bcrypt'
-import { EpisodeInstance } from './Episode'
+import { EpisodeInstance } from "./Episode"
 
 type CheckPasswordCallback = (err?: Error, isSame?: boolean) => void
 
@@ -23,7 +23,7 @@ export interface UserInstance extends Model<User, UserCreationAttributes>, User 
     checkPassword: (password: string, callbackfn: CheckPasswordCallback) => void
 }
 
-export const User = sequelize.define<UserInstance, User>('users', {
+export const User = sequelize.define<UserInstance, User>('User', {
     id: {
         allowNull: false,
         autoIncrement: true,
@@ -68,14 +68,14 @@ export const User = sequelize.define<UserInstance, User>('users', {
 }, {
     hooks: {
         beforeSave: async (user) => {
-            if (user.isNewRecord || user.changed('password'))
+            if (user.isNewRecord || user.changed('password')) {
                 user.password = await bcrypt.hash(user.password.toString(), 10)
+            }
         }
     }
 })
 
 User.prototype.checkPassword = function (password: string, callbackfn: CheckPasswordCallback) {
-
     bcrypt.compare(password, this.password, (err, isSame) => {
         if (err) {
             callbackfn(err)
@@ -83,5 +83,4 @@ User.prototype.checkPassword = function (password: string, callbackfn: CheckPass
             callbackfn(err, isSame)
         }
     })
-
 }

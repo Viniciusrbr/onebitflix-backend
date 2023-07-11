@@ -1,7 +1,6 @@
-import { Category } from '../models'
+import { Category } from "../models"
 
 export const categoryService = {
-
     findAllPaginated: async (page: number, perPage: number) => {
         const offset = (page - 1) * perPage
 
@@ -25,11 +24,15 @@ export const categoryService = {
             attributes: ['id', 'name'],
             include: {
                 association: 'courses',
-                attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+                attributes: [
+                    'id',
+                    'name',
+                    'synopsis',
+                    ['thumbnail_url', 'thumbnailUrl']
+                ]
             }
         })
 
         return categoryWithCourses
     }
-
 }

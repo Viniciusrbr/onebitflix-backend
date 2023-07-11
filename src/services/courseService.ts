@@ -2,10 +2,14 @@ import { Op } from "sequelize"
 import { Course } from "../models"
 
 export const courseService = {
-
     findByIdWithEpisodes: async (id: string) => {
         const courseWithEpisodes = await Course.findByPk(id, {
-            attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+            attributes: [
+                'id',
+                'name',
+                'synopsis',
+                ['thumbnail_url', 'thumbnailUrl']
+            ],
             include: {
                 association: 'episodes',
                 attributes: [
@@ -26,13 +30,17 @@ export const courseService = {
 
     getRandomFeaturedCourses: async () => {
         const featuredCourses = await Course.findAll({
-            attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+            attributes: [
+                'id',
+                'name',
+                'synopsis',
+                ['thumbnail_url', 'thumbnailUrl']
+            ],
             where: {
                 featured: true
             }
         })
 
-        // logica para pegar 3 cursos aleatorios em destaque
         const randomFeaturedCourses = featuredCourses.sort(() => 0.5 - Math.random())
 
         return randomFeaturedCourses.slice(0, 3)
@@ -41,33 +49,33 @@ export const courseService = {
     getTopTenNewest: async () => {
         const courses = await Course.findAll({
             limit: 10,
-            order: [['created_at', 'DESC']],
+            order: [['created_at', 'DESC']]
         })
 
         return courses
     },
 
-    // query personalizada para obter uma lista dos 10 cursos com a maior contagem de likes
     getTopTenByLikes: async () => {
-        const results = await Course.sequelize?.query(
+        const result = await Course.sequelize?.query(
             `SELECT
-            courses.id,
-            courses.name,
-            courses.synopsis,
-            courses.thumbnail_url as thumbnailUrl,
-            COUNT(users.id) AS likes
-          FROM courses
-            LEFT OUTER JOIN likes
-              ON courses.id = likes.course_id
-              INNER JOIN users
-                ON users.id = likes.user_id
-          GROUP BY courses.id
-          ORDER BY likes DESC
-          LIMIT 10;`
+                courses.id,
+                courses.name,
+                courses.synopsis,
+                courses.thumbnail_url AS thumbnailUrl,
+                COUNT(users.id) AS likes
+            FROM courses
+                LEFT OUTER JOIN likes
+                    ON courses.id = likes.course_id
+                    INNER JOIN users
+                        ON users.id = likes.user_id
+            GROUP BY courses.id
+            ORDER BY likes DESC
+            LIMIT 10;
+            `
         )
 
-        if (results) {
-            const [topTen] = results
+        if (result) {
+            const [topTen] = result
             return topTen
         } else {
             return null
@@ -75,11 +83,15 @@ export const courseService = {
     },
 
     findByName: async (name: string, page: number, perPage: number) => {
-
         const offset = (page - 1) * perPage
 
         const { count, rows } = await Course.findAndCountAll({
-            attributes: ['id', 'name', 'synopsis', ['thumbnail_url', 'thumbnailUrl']],
+            attributes: [
+                'id',
+                'name',
+                'synopsis',
+                ['thumbnail_url', 'thumbnailUrl']
+            ],
             where: {
                 name: {
                     [Op.iLike]: `%${name}%`
@@ -95,6 +107,5 @@ export const courseService = {
             perPage,
             total: count
         }
-    },
-
+    }
 }

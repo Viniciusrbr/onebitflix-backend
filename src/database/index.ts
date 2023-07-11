@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from "sequelize"
 
 export const sequelize = new Sequelize({
     dialect: 'postgres',
@@ -8,6 +8,6 @@ export const sequelize = new Sequelize({
     username: 'postgres',
     password: '1234admin',
     define: {
-        underscored: true // converte de snake_case para camelCase
+        underscored: true
     }
 })

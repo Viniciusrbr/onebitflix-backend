@@ -1,10 +1,10 @@
-import { Category } from './Category'
-import { Course } from './Course'
-import { Episode } from './Episode'
-import { User } from './User';
-import { Favorite } from './Favorite';
-import { Like } from './Like';
-import { WatchTime } from './WatchTime';
+import { Category } from "./Category";
+import { Course } from "./Course";
+import { Episode } from "./Episode";
+import { Favorite } from "./Favorite";
+import { Like } from "./Like";
+import { User } from "./User";
+import { WatchTime } from "./WatchTime";
 
 Category.hasMany(Course, { as: 'courses' })
 
@@ -26,8 +26,8 @@ User.belongsToMany(Episode, { through: WatchTime })
 User.hasMany(Favorite, { as: 'FavoritesCourses', foreignKey: 'user_id' })
 
 export {
-    Course,
     Category,
+    Course,
     Episode,
     Favorite,
     Like,

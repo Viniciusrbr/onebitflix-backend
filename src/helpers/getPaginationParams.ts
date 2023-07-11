@@ -10,4 +10,4 @@ export function getPaginationParams(query: any): [page: number, perPage: number]
         : 1
 
     return [pageNumber, perPageNumber]
-}
+} 

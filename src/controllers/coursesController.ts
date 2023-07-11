@@ -1,15 +1,13 @@
-import { Request, Response } from 'express'
-import { courseService } from '../services/courseService'
-import { getPaginationParams } from '../helpers/getPaginationParams'
-import { AuthenticatedRequest } from '../middlewares/auth'
-import { likeService } from '../services/likeService'
-import { favoriteService } from '../services/favoriteService'
+import { Request, Response } from "express";
+import { getPaginationParams } from "../helpers/getPaginationParams";
+import { AuthenticatedRequest } from "../middlewares/auth";
+import { courseService } from "../services/courseService";
+import { favoriteService } from "../services/favoriteService";
+import { likeService } from "../services/likeService";
 
 export const coursesController = {
-
     // GET /courses/featured
     featured: async (req: Request, res: Response) => {
-
         try {
             const featuredCourses = await courseService.getRandomFeaturedCourses()
             return res.json(featuredCourses)
@@ -18,7 +16,6 @@ export const coursesController = {
                 return res.status(400).json({ message: err.message })
             }
         }
-
     },
 
     // GET /courses/newest
@@ -51,7 +48,7 @@ export const coursesController = {
         const [page, perPage] = getPaginationParams(req.query)
 
         try {
-            if (typeof name !== 'string') throw new Error('name param must be of type string');
+            if (typeof name !== 'string') throw new Error('name param must be of type string')
             const courses = await courseService.findByName(name, page, perPage)
             return res.json(courses)
         } catch (err) {
@@ -73,14 +70,11 @@ export const coursesController = {
 
             const liked = await likeService.isLiked(userId, Number(courseId))
             const favorited = await favoriteService.isFavorited(userId, Number(courseId))
-
             return res.json({ ...course.get(), favorited, liked })
-
         } catch (err) {
             if (err instanceof Error) {
                 return res.status(400).json({ message: err.message })
             }
         }
-    },
-
+    }
 }
